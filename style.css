@@ -35,6 +35,16 @@ body {
     
 }
 
+.link-container-three {
+    position: absolute;
+    top: 49%;
+    right: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+
+
 .separator {
     width: 40%; 
     border: 0;
