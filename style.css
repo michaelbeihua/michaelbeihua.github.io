@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    display: block
+}
+
 body {
     background-color: white;
     color: black;
@@ -43,9 +49,45 @@ body {
     text-align: center;
 }
 
+.link-container-three a {
+    color: black;
+}
 
+.double-image-container {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+}
+
+.double-image-container figure {
+    margin-right: -20px;
+    width: 30%;
+}
+
+.double-image-container img {
+    width: 100%;
+}
+
+.image-text-block {
+    display: flex;
+    align-items: center;
+    padding-bottom: 30px;
+}
+
+.image-text-block img {
+    margin-right: 30px;
+}
+
+.image-text-block p {
+    border-left: 4px solid #007bff;
+    border-color: black;
+    padding: 20px;
+    font-weight: bold;
+}
 
 .separator {
+    position: relative;
+    top: -10px;
     width: 40%; 
     border: 0;
     height: 1px; 
