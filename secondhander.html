@@ -1,5 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+    <link rel="stylesheet" href="style.css">
 </head>
+<body>
+    <h1 style="text-align: center">Secondhander</h1>
+    <hr class="separator">
+    <h3 style="width: 60%; margin-left: auto; margin-right: auto; text-align: center; font-family: 'Montserrat', sans-serif;">
+        A Python-powered Discord bot that automates my hunt for vintage fashion
+    </h3>
+
+    <div style="width: 60%; margin-left: auto; margin-right: auto; text-align: center;">
+        <figure>
+            <img style="width: 80%; margin-left: auto; margin-right: auto; text-align: center;" src="images/secondhander_cover_gif.gif">
+        </figure>
+        <br>
+        <p style="font-weight: bold;">
+            As re-commerce matures, finding rare vintage pieces is shifting away from being ‘in-the-know’ towards being ‘obsessed-with-checking’.
+             In hopes of gaining an edge over a growing number of hawk-eyed collectors and resellers, I coded a program that automates online secondhand shopping.
+        </p>
+        <br>
+        <figure>
+            <img style="width:90%; margin-left: auto; margin-right: auto; text-align: center;" src="/images/architecture_diagram_image.png">
+            <figcaption> Simplified workflow architecture</figcaption>
+        </figure>
+        <br>
+        <p>
+            The development process started with figuring out how to extract item data from marketplace listings.
+            Since collecting data from these platforms is technically prohibited, I <b>definitely</b> did not do the following:
+            <ul>
+                <li>Use OAuth tokens to interact with each platform’s API by mimicking a legitimate mobile client request and then set the logic for URL search querying</li>
+                <li>Create a scraping function to extract new listings from Vinted and filter them based on specific parameters</li>
+            </ul>
+        </p>
+        <p>
+            I also had to determine how to generate appropriate alerts from a database that was constantly queried and updated.
+            Using a pre-built Python library called hikari, I developed a system to parse item data and generate formatted embeds as Discord messages.
+        </p>
+        <figure>
+            <img style="width:60%; margin-left: auto; margin-right: auto; text-align: center;" src="images/secondhander_embedding_image.png">
+        </figure>
+        <br>
+        <p>
+            Finally, I set up a Discord bot that was integrated with the rest of my program, capable of responding to preset user commands and managing alerts, all through the Discord API.
+        </p>
+        <figure>
+            <img style="width:40%; margin-left: auto; margin-right: auto; text-align: center;" src="images/ron_orb_search_example.png">
+            <figcaption>An example alert for a new Vinted listing</figcaption>
+        </figure>
+        <br>
+        <p>
+            <i>A special thanks to talented developers who made requests, hikari, lightbulb, dataset, typing and asyncio.</i>
+        </p>
+    </div>
+</body>

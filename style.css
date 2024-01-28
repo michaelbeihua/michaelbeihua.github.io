@@ -125,3 +125,8 @@ pre {
 figcaption {
     font-size: small;
 }
+
+ul {
+    list-style-type: square;
+    padding-left: 100px;
+}
