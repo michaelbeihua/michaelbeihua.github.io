@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<canvas id="drawingCanvas"></canvas>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +7,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="email-container">
+        <a href="mailto:contact@michaelbeihua.com" class="email-link">Contact Me</a>
+    </div>
     <div class ="link-container-one">
         <a href="sentimentanalysis.html">High Fashion Sentiment Analysis</a>
     </div>
@@ -16,4 +20,37 @@
         <a href="secondhander.html">Online Marketplace Algorithm</a>
     </div>
 </body>
+<script>
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas to full window size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let isDrawing = false;
+
+    canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        ctx.moveTo(e.clientX, e.clientY);
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDrawing = false;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (isDrawing) {
+            ctx.lineTo(e.clientX, e.clientY);
+            ctx.stroke();
+        }
+    });
+
+    // Optional: Resize canvas on window resize
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+</script>
 </html>
