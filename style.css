@@ -198,21 +198,27 @@ ul {
     padding-left: 100px;
 }
 
-button {
-    position: fixed;
-    top: 50%; /* Centers vertically */
-    left: 10px;
-    padding: 5px 10px;
-    background: linear-gradient(to right, #707070, #A0A0A0, #C0C0C0, #E0E0E0, #F0F0F0);
-    color: #333;
-    border: none;
-    border-radius: 2px; 
-    font-family: Arial, sans-serif; 
-    font-size: 14px;
+.back-button {
+    display: inline-block;
+    text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    position: fixed; /* or absolute, depending on your layout */
+    top: 45%; /* Adjust based on where you want the button */
+    left: 10px; /* Adjust based on where you want the button */
 }
 
-button:hover {
-    background: linear-gradient(to right, #686868, #989898, #B8B8B8, #D8D8D8, #E8E8E8);
+.back-button img {
+    max-width: 70px; /* Maximum size of the image */
+    height: auto; /* Maintain aspect ratio */
+    transition: transform 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.back-button:hover img {
+    transform: scale(1.1); /* Slight increase in size on hover */
+}
+
+@media screen and (max-width: 768px) { /* Adjust for smaller screens */
+    .back-button img {
+        max-width: 50px; /* Smaller size on smaller screens */
+    }
 }
