@@ -164,6 +164,9 @@ body {
 
 .tableauPlaceholder {
     padding-bottom: 60px;
+    width: 900px; 
+    height: 627px; 
+    margin: 0 auto;
 }
 
 h4 {
