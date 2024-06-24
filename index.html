@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+		<style>
+			body, html {
+				margin: 0;
+				height: 100%;
+				width: 100%;
+				overflow: hidden;
+				font-family: "Roboto Condensed", sans-serif;
+			}
+			.panel {
+				display: none;
+				position: fixed;
+				top: 0;
+				right: 0;
+				width: 50%;
+				height: 100%;
+				background-color: white;
+				border-left: 1px solid #ccc;
+				overflow-y: auto;
+				padding: 20px;
+				z-index: 1000;
+				flex-direction: column;
+			}
+
+			.panel-content {
+				margin-top: 5%;
+				margin-left: 5%;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				/* height: 100%; */
+				position: relative;
+			}
+
+			.title {
+				display: flex;
+				font-size: 2.5em;
+				font-weight: bold;
+				text-align: left;
+				margin-bottom: 5%;
+			}
+
+			.subtitle {
+				display: flex;
+				font-size: 1.2em;
+				margin-top: 5%;
+				margin-bottom: 0;
+			}
+
+			.text {
+				display: flex;
+				margin-top: 2%;
+				font-size: 1em;
+				color: grey;
+				width: 60%;
+			}
+
+			.text-spacer {
+				margin-bottom: 5%;
+			}
+
+			a {
+			color: 	#303030;
+			text-decoration: none;
+			font-weight: 700;
+			background-image: linear-gradient(45deg,grey,white 30%,black);
+			background-position: 0 100%;
+			background-repeat: repeat-x;
+			background-size: 100% 2px;
+			transition: background-size .3s;
+			}
+
+			a:focus,
+			a:hover {
+			color: black;
+			background-size: 400% 2px;
+			-webkit-animation: underline-gradient 4s linear infinite;
+			animation: underline-gradient 4s linear infinite;
+			text-decoration: none;
+			}	
+
+			.call-to-action {
+				align-self: flex-end;
+				font-size: 1em;
+				cursor: pointer;
+				position: relative;
+				margin-top: 10%;
+				bottom: 5%;
+				right: 5%;
+			}
+
+			.scrollable {
+			overflow-y: auto; /* Enables vertical scrolling */
+			max-height: 100%; /* Ensures the panel doesn't exceed the viewport height */
+			}
+
+			.video-controller {
+				width: 80%;
+				display: flex;
+				justify-content: center;
+				margin-bottom: 10%;
+			}
+
+			.graphic {
+				width: 80%;
+				display: flex;
+				margin-bottom: 0;
+			}
+
+				.close-button {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				background: #ccc;
+				border: none;
+				padding: 5px 10px;
+				cursor: pointer;
+				}
+
+				.image-mosaic {
+				width: 80%;
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+				gap: 2px;
+			}
+
+.image-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+		.image-item img {
+    width: 100%;
+    height: 50px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+
+/* Hover effect */
+.image-item:hover img {
+    transform: scale(1.2);
+}
+
+/* Click effect using pseudo-class */
+.image-item:focus img,
+.image-item:active img {
+    transform: scale(1.5);
+    z-index: 1;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    padding-top: 60px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 333px; /* Fixed width */
+    height: 508px; /* Fixed height */
+    object-fit: cover;
+}
+
+.close, .left-arrow, .right-arrow {
+    position: absolute;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    top: 20px;
+    cursor: pointer;
+}
+
+.close {
+    right: 20px;
+}
+
+.left-arrow {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.right-arrow {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.close:hover,
+.close:focus,
+.left-arrow:hover,
+.left-arrow:focus,
+.right-arrow:hover,
+.right-arrow:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+			.content-wrapper {
+			display: flex;
+			flex: 1;
+			}
+
+		.graph-container {
+		width: 90%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 10px;
+        }
+
+			.text-container {
+			width: 0%; /* Adjust width as needed */
+			display: flex;
+			justify-content: center; /* Center horizontally */
+			align-items: center; /* Center vertically */
+			padding-left: 20px; /* Add padding between the graph and text */
+			}
+
+
+			.object-button {
+			position: absolute;
+			width: 40px;
+			height: 40px;
+			border: 1px solid rgba(255, 255, 255, 0.5); /* Semi-translucent outer circle */
+			border-radius: 50%;
+			background-color: transparent;
+			cursor: pointer;
+			z-index: 1000;
+			transition: transform 0.3s ease, opacity 0.3s ease;
+			}
+
+			.object-button::before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 30px; /* Adjust the size of the inner circle */
+			height: 30px;
+			border: 2px solid rgba(255, 255, 255, 0.8); /* Semi-translucent inner circle */
+			border-radius: 50%;
+			background-color: rgba(255, 255, 255, 0.3); /* Semi-translucent center */
+			}
+
+			.object-button::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 4px; /* Remove the size of the center dot */
+			height: 4px; /* Remove the size of the center dot */
+			background-color: rgba(255, 255, 255, 0.8); /* Color of the center dot */
+			border-radius: 50%;
+			transition: opacity 0.3s ease;
+			}
+
+			.object-button:hover {
+			transform: scale(0.9);
+			}
+
+			.object-button.show-tooltip::after {
+			content: attr(data-description); /* Use data-description attribute */
+			position: absolute;
+			top: 38%;
+			left: calc(100% + 10px); /* Adjust the distance from the button */
+			transform: translateY(-50%);
+			background-color: none; /* Remove background color */
+			padding: 0; /* Remove padding */
+			border-radius: 0; /* Remove border radius */
+			box-shadow: none; /* Remove shadow */
+			z-index: 1001; /* Ensure it appears above the button */
+			font-family: "Roboto Condensed", sans-serif; /* Change font family */
+			color: white; /* Change text color to white */
+			font-weight: bold; /* Make text bold */
+			text-shadow: none; /* Remove text shadow */
+			white-space: nowrap; /* Prevent text wrapping */
+			opacity: 1; /* Show the tooltip */
+			}
+
+			.object-button.show-tooltip::after {
+			width: 0; /* Hide the center dot */
+			height: 0; /* Hide the center dot */
+			background-color: transparent; /* Ensure it is transparent */
+			}
+
+			.myChart{
+			max-width: 100%;
+			max-height: 100%;
+			}
+
+			.audio-controller {
+    		display: block;
+			--media-control-background: #696969;
+    		width: 100%; /* Make the controller take up the full width of its container */
+			margin-bottom: 5%;
+ 			}
+
+			media-play-button,
+			media-seek-backward-button,
+			media-seek-forward-button, 
+			media-mute-button {
+			--media-control-hover-background: darkgrey;
+			}
+
+			media-control-bar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background-color: #696969; /* Optional: Change the background color */
+			padding: 1rem; /* Optional: Add some padding */
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow */
+			}
+
+			.video-control-bar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background-color: transparent;/* Ensure no background color */
+			padding: 0; /* Remove padding */
+			box-shadow: none; /* Remove shadow */
+			}
+
+			@media (max-width: 768px) {
+			media-control-bar {
+			flex-direction: column;
+			align-items: stretch;
+			}
+
+			media-time-range,
+			media-volume-range {
+			margin: 1rem 0; /* Adjust margin for vertical layout */
+			}
+			}
+
+			.close-button {
+			position: absolute;
+			right: 32px;
+			top: 32px;
+			width: 32px;
+			height: 32px;
+			opacity: 0.3;
+			background: transparent;
+			}
+			.close-button:hover {
+			opacity: 1;
+			}
+			.close-button:before, .close-button:after {
+			position: absolute;
+			left: 15px;
+			content: ' ';
+			height: 33px;
+			width: 2px;
+			background-color: #333;
+			}
+			.close-button:before {
+			transform: rotate(45deg);
+			}
+			.close-button:after {
+			transform: rotate(-45deg);
+			}
+
+
+			#enter-screen {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 9999;
+			}
+
+			#enter-video-container {
+			position: absolute;
+			top: 30%; /* Adjust based on your layout */
+			left: 60%; /* Adjust based on your layout */
+			transform: translate(-50%, -50%);
+			z-index: 2; /* Above the mask */
+		}
+
+			#enter-video {
+			width: 40%; /* Adjust based on your desired size */
+			height: auto; 
+    		transition: opacity 1.5s ease;
+			}
+			
+			.fade-out {
+    		opacity: 0;
+			}
+
+			#mask-container {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 1;
+			}
+
+			#svg-mask {
+				width: 100%;
+				height: 100%;
+			}
+
+			.enter-no-sound {
+			position: fixed;
+			bottom: 40%;
+			left: 50%;
+			transform: translateX(-50%);
+			font-size: 15px;
+			color: black;
+			cursor: pointer;
+			z-index: 9999;
+			text-decoration: underline;
+			text-underline-offset: 5px;
+			display: none;
+			font-weight: bold;
+			}
+
+			.enter-no-sound:hover {
+				color: lightgray;
+			}
+
+			#enter-button {
+				position: relative;
+				z-index: 2; /* Ensure it's on top of the mask */
+				width: 100px;
+				height: 100px;
+				border: 1px solid black;
+				border-radius: 50%;
+				background-color: white;
+				background-position: center;
+				background-repeat: no-repeat;
+				color: black;
+				font-size: 1.5em;
+				cursor: pointer;
+				transition: background-color 0.3s ease, color 0.1s ease, border-color 0.3s ease, background-image 0.3s ease;
+			}
+
+			#enter-button::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-image: url('button_background.png');
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			border-radius: 50%;
+			opacity: 0;
+			transition: opacity 4s ease;
+			z-index: -1; /* Ensure the pseudo-element is behind the button text */
+			}
+
+			#enter-button:hover::before {
+				opacity: 1;
+			}
+
+			#enter-button:hover {
+				color: transparent;
+				border: none;
+				background-color: transparent;
+			}
+
+			#enter-button.clicked {
+				background-color: transparent;
+				color: transparent;
+				border-color: transparent;
+				opacity: 0;
+			}
+
+			#mask-circle.expand {
+				transition: r 2s ease;
+				r: 5000px; /* Large value to ensure full screen */
+			}
+
+			#enter-button, #mask-circle {
+				display: none;
+			}
+
+			.show {
+    		display: block !important; /* Class to show elements */
+			}
+
+			.scroll-indicator {
+			position: fixed;
+			bottom: 10%; /* Adjust as needed */
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 9999;
+			text-align: center;
+			color: #fff;
+			font-size: 12px;
+			}
+
+			.scroll-downs {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			margin: auto;
+			width: 34px;
+			height: 55px;
+			}
+
+			.mousey {
+			width: 3px;
+			padding: 10px 15px;
+			height: 35px;
+			border: 2px solid #fff;
+			border-radius: 25px;
+			opacity: 0.75;
+			box-sizing: content-box;
+			}
+
+			.scroller {
+			width: 3px;
+			height: 10px;
+			border-radius: 25%;
+			background-color: #fff;
+			animation-name: scroll;
+			animation-duration: 2.2s;
+			animation-timing-function: cubic-bezier(.15,.41,.69,.94);
+			animation-iteration-count: infinite;
+			}
+
+			.scroll-text {
+    		position: relative;
+			top: 55px;
+			}
+
+			@keyframes scroll {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(5px); /* Move scroller down by 5px */
+    }
+    30% {
+        opacity: 1;
+        transform: translateY(10px); /* Move scroller down by 10px */
+    }
+    50% {
+        opacity: 0;
+        transform: translateY(15px); /* Maximum move scroller down by 15px */
+    }
+    70% {
+        opacity: 1;
+        transform: translateY(10px); /* Move scroller down by 10px */
+    }
+    90% {
+        opacity: 1;
+        transform: translateY(5px); /* Move scroller down by 5px */
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+}
+
+			#scroll-indicator {
+				display: block; /* Ensure it's initially visible */
+				opacity: 1;
+				transition: opacity 3s ease; /* Adjust duration and timing function as needed */
+			}
+
+			#scroll-indicator.hidden {
+				opacity: 0;
+			}
+
+			.sound-info-button-container {
+			position: fixed;
+			bottom: 20px;
+			left: 20px;
+			display: flex;
+			gap: 20px;
+			}
+
+			.button-label {
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			color: #fff;
+			margin-right: 10px;
+			}
+
+			.sound-container,
+			.info-container {
+			display: flex;
+			align-items: center;
+			}
+
+			#soundButton,
+			#infoButton {
+			background: transparent;
+			border: 1px solid #fff;
+			cursor: pointer;
+			padding: 5px;
+			border-radius: 3px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 24px;
+    		height: 24px;
+			}
+
+			.sound-icon {
+			display: flex;
+			justify-content: space-around;
+			width: 12px;
+			}
+
+			.bar {
+			width: 1px;
+			height: 6px;
+			background-color: #fff;
+			animation: soundOn 2s infinite;
+			}
+
+			#bar1 {
+			animation-delay: 0s;
+			}
+
+			#bar2 {
+			animation-delay: 0.4s;
+			}
+
+			#bar3 {
+			animation-delay: 0.8s;
+			}
+
+			@keyframes soundOn {
+			0%, 100% {
+				height: 6px;
+			}
+			50% {
+				height: 12px;
+			}
+			}
+
+			.sound-off .bar {
+			animation: none;
+			height: 1px;
+			width: 6px;
+			}
+
+			.info-icon {
+			font-family: Arial, sans-serif;
+			font-size: 14px !important;
+			color: #fff;
+			}
+
+			.info-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.5);
+				display: none; /* Hide initially */
+				justify-content: center;
+				align-items: center;
+			}
+
+			.info-overlay.active {
+				display: flex; /* Show when active */
+			}
+
+			.invitation-card {
+				background: white;
+				padding: 20px 40px;
+				border-radius: 10px;
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+				text-align: center;
+				width: 80%;
+				max-width: 600px;
+			}
+
+			.invitation-content p {
+				margin: 10px 0;
+				font-size: 18px;
+				line-height: 1.5;
+			}
+
+			.invitation-content p:first-child {
+				font-size: 24px;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+
+			.invitation-content p:nth-child(2) {
+				margin-bottom: 20px;
+			}
+
+			.invitation-content p:nth-child(3) {
+				font-size: 26px;
+				margin-bottom: 30px;
+				font-style: italic;
+			}
+
+			.invitation-content p#current-date,
+			.invitation-content p#current-time {
+				font-size: 18px;
+				margin-bottom: 5px;
+			}
+
+			.invitation-content p#browser-info {
+				font-size: 18px;
+				margin-bottom: 30px;
+			}
+
+			.invitation-content p:nth-child(7) {
+				font-size: 22px;
+				margin-bottom: -10px;
+			}
+			
+			.invitation-content p:nth-child(8) {
+				font-size: 15px;
+				margin-bottom: 40px;
+			}
+
+			.invitation-content p:nth-child(9),
+			.invitation-content p:last-child {
+				font-style: italic;
+				font-size: 12px;
+				margin-bottom: -10px;
+			}
+
+			.button-label {
+				font-size: 14px;
+			}
+
+			.sound-icon, .info-icon {
+				font-size: 20px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="enter-screen">
+			<div id="mask-container">
+				<svg id="svg-mask">
+					<defs>
+						<mask id="mask">
+							<rect width="100%" height="100%" fill="white" />
+							<circle id="mask-circle" cx="50%" cy="50%" r="50" fill="black" />
+						</mask>
+					</defs>
+					<rect width="100%" height="100%" fill="white" mask="url(#mask)" />
+				</svg>
+			</div>
+			<div id="enter-video-container">
+				<video id="enter-video" autoplay muted>
+					<source src="itsgivingcunt.mp4" type="video/mp4">
+				</video>
+			</div>
+				<button id="enter-button">Enter</button>
+				<div id="enter-no-sound" class="enter-no-sound">Enter with no sound</div>
+		</div>
+		<div class="scroll-indicator" id="scroll-indicator">
+			<div class="scroll-downs">
+				<div class="mousey">
+					<div class="scroller"></div>
+				</div>
+			</div>
+			<div class="scroll-text">Scroll to walk the runway</div>
+		</div>
+		<div class="sound-info-button-container">
+			<div class="sound-container" id="soundContainer">
+				<span class="button-label">Sound</span>
+				<button id="soundButton">
+				  <div class="sound-icon">
+					<div class="bar" id="bar1"></div>
+					<div class="bar" id="bar2"></div>
+					<div class="bar" id="bar3"></div>
+				  </div>
+				</button>
+			  </div>
+			  <div class="info-container" id="infoContainer">
+				<span class="button-label">Info</span>
+				<button id="infoButton">
+				  <div class="info-icon">?</div>
+				</button>
+			  </div>
+		</div>
+		<div class="info-overlay" id="infoOverlay">
+			<div class="invitation-card">
+				<div class="invitation-content">
+					<p>Michael Beihua Smith</p>
+					<p>invites you to</p>
+					<p>FW24 COLLECTION (of projects and passions)</p>
+					<p id="current-date"></p>
+					<p id="current-time"></p>
+					<p id="browser-info"></p>
+					<p>An interactive and immersive showing</p>
+					<p>Dress code: 'Zoom call' (pants optional)</p>
+					<p>Invitation valable pour 1 personne.</p>
+					<p>Cette invitation sera demandée à l'entrée.</p>
+				</div>
+			</div>
+		</div>
+		<div id="button-container"></div>
+		<div class="panel" id="panel" style="display: none;">
+			<button class="close-button" id="closeButton" aria-label="Close"></button>
+			<div id="panel-content" class="panel-content">
+				<h1 class="title">Love or Loathe</h1>
+				<div class="graph-container">
+					<canvas id="myChart"></canvas>
+				</div>
+				<p class="subtitle">This is a description text that is larger than the regular text.</p>
+				<p class="text">This is some regular text.</p>
+				<a class="call-to-action" href="#">Call to Action</a>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+		<script type="module" src="/main.js"></script>
+		<script src="script.js"></script>
+		<script type="module" src="https://cdn.jsdelivr.net/npm/media-chrome@3/+esm"></script>
+	</body>
+</html>
